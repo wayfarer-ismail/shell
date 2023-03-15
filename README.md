@@ -9,15 +9,14 @@ when executed it does:\
 • Print the prompt again and accept more commands.\
 • Exit when EOF is received (Ctrl+D).
 
-The implemented commands are:\
-ls\
-sleep\
-pwd\
-mkdir\
-pwd\
-cd\
-rmdir\
-echo\
-whoami\
-cat\
-head
+The implemented commands are:
+1. ls
+2. sleep
+3. pwd
+4. mkdir
+5. cd
+6. rmdir
+7. echo
+8. whoami
+9. cat
+10. head
