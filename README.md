@@ -19,4 +19,5 @@ cd\
 rmdir\
 echo\
 whoami\
-cat
+cat\
+head

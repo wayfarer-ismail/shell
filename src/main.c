@@ -40,7 +40,7 @@ int shell() {
 
     // parse input
     char **args = malloc(sizeof(char *));
-    char *token = strtok(line, " ");
+    char *token = strtok(line, " \n");
     parse_args(args, token);
 
 
