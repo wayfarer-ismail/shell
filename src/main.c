@@ -7,15 +7,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
+#include "util.h"
 
-#define MAX_LINE 80 // maximum length of a command
 extern char **environ;
 
 int shell();
-
-void readline(char *line);
-
-void parse_args(char **args, char *token);
 
 int main(void)
 {
@@ -31,6 +27,7 @@ int main(void)
 }
 
 int shell() {
+    printDateTime();
     printf("# ");
     fflush(stdout);
 
@@ -48,6 +45,10 @@ int shell() {
     if (strcmp(args[0], "exit") == 0) {
         free(args);
         return -1;
+    } else if (strcmp(args[0], "cd") == 0) {
+        cd(args);
+        free(args);
+        return 1;
     }
 
     pid_t pid = fork();
@@ -63,30 +64,4 @@ int shell() {
     }
 
     return 1;
-}
-
-void readline(char *line) {
-    fflush(stdin);
-    fgets(line, MAX_LINE, stdin);
-
-    // trim newline character
-    size_t len = strlen(line);
-    if (len > 0 && line[len-1] == '\n') {
-        line[len-1] = '\0';
-    }
-}
-
-void parse_args(char **args, char *token) {
-    int count = 0;
-    while (token != NULL) {
-        args[count] = malloc(sizeof(char) * (strlen(token) + 1));
-        strcpy(args[count], token);
-        count++;
-        token = strtok(NULL, " \n");
-    }
-    args[count] = NULL;
-
-    for (int j = 0; j < count; ++j) {
-        printf("%s ", args[j]);
-    }
 }
