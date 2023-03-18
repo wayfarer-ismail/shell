@@ -62,9 +62,13 @@ void parse_args(char **args, char *token) {
 
 void sig_handler(int signo) {
     if (signo == SIGINT) {
-        printf("\nreceived SIGINT\n");
+        printf("\n");
+        printDateTime();
+        printf("# ^C\n");
+        printDateTime();
+        printf("# ");
+
         fflush(stdout);
-        //kill(getpid(), SIGTERM);
     }
 }
 

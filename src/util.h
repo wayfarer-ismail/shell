@@ -1,5 +1,5 @@
 //
-// Created by ismai on 16/03/2023.
+// Created by ismail on 16/03/2023.
 //
 
 #ifndef ASSIGNMENT2_UTIL_H
