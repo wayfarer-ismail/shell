@@ -7,6 +7,7 @@
 #include <time.h>
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <sys/unistd.h>
 
 void printDateTime() {
@@ -56,6 +57,14 @@ void parse_args(char **args, char *token) {
 
     for (int j = 0; j < count; ++j) {
         printf("%s ", args[j]);
+    }
+}
+
+void sig_handler(int signo) {
+    if (signo == SIGINT) {
+        printf("\nreceived SIGINT\n");
+        fflush(stdout);
+        //kill(getpid(), SIGTERM);
     }
 }
 

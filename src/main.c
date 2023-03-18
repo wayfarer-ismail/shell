@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <signal.h>
 #include "util.h"
 
 extern char **environ;
@@ -15,9 +16,9 @@ int shell();
 
 int main(void)
 {
-    int status = 1; // status of child process
+    int status = 0; // status of child process
 
-    while (status == 1) {
+    while (status == 0) {
         status = shell();
         printf("Status %i\n", status);
     }
@@ -30,6 +31,8 @@ int shell() {
     printDateTime();
     printf("# ");
     fflush(stdout);
+
+    signal(SIGINT, sig_handler); // watch for ctrl-c
 
     // read commands from stdin
     char line[MAX_LINE];
@@ -48,7 +51,7 @@ int shell() {
     } else if (strcmp(args[0], "cd") == 0) {
         cd(args);
         free(args);
-        return 1;
+        return 0;
     }
 
     pid_t pid = fork();
@@ -57,11 +60,13 @@ int shell() {
             fprintf(stderr, "Exec failed\n");
         }
     } else if (pid > 0) { // parent process
+        signal(SIGINT, sig_handler); // watch for ctrl-c
         int status;
         waitpid(pid, &status, 0); // wait for child process to finish
+        signal(SIGINT, SIG_DFL); //restore default behaviour
     } else {
         return -1; //if fork fails then stop programme
     }
 
-    return 1;
+    return 0;
 }

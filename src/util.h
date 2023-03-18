@@ -18,3 +18,5 @@ int cd(char **args);
 void readline(char *line);
 
 void parse_args(char **args, char *token);
+
+void sig_handler(int signo);
