@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g -Wall
 LIBS = -lm
 
-all: main ls head sleep pwd mkdir cd rmdir
+all: main ls head sleep pwd mkdir rmdir
 
 main: main.o util.o
 	$(CC) $(LIBS) $^ -o $@
@@ -24,9 +24,6 @@ mkdir: mkdir.o
 	$(CC) $(LIBS) $^ -o $@
 
 rmdir: rmdir.o
-	$(CC) $(LIBS) $^ -o $@
-
-cd: cd.o
 	$(CC) $(LIBS) $^ -o $@
 
 head: head.o
@@ -51,11 +48,9 @@ mkdir.o: mkdir.c
 rmdir.o: rmdir.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
-cd.o: cd.c
-	$(CC) -c $(CFLAGS) $^ -o $@
 
 head.o: head.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o main ls head sleep pwd mkdir cd rmdir
+	rm -rf *.o main ls head sleep pwd mkdir rmdir

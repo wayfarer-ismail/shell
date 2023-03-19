@@ -11,6 +11,7 @@
 #include "util.h"
 
 extern char **environ;
+char util_path[MAX_LINE];
 
 int shell();
 
@@ -18,9 +19,11 @@ int main(void)
 {
     int status = 0; // status of child process
 
+    sprintf(util_path, "%s", getcwd(NULL, 0)); // construct path to where commands are stored
+
     while (status == 0) {
         status = shell();
-        printf("Status %i\n", status);
+        //printf("Status %i\n", status);
     }
 
     printf("bye\n");
@@ -54,11 +57,17 @@ int shell() {
         return 0;
     }
 
+    // set default directory to /home/user/my_program
+    chdir("/home/user/my_program");
     pid_t pid = fork();
     if (pid == 0) { // child process
-        if (execve(args[0], args, NULL) < 0) { // execute command
+        char path[MAX_LINE];
+        sprintf(path, "%s/%s", util_path, args[0]); // construct full path
+        // execute command
+        if (execve(path, args, NULL) < 0) {
             fprintf(stderr, "Exec failed\n");
         }
+
     } else if (pid > 0) { // parent process
         signal(SIGINT, sig_handler); // watch for ctrl-c
         int status;
