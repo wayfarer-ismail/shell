@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <signal.h>
+#include <fcntl.h>
 #include <sys/unistd.h>
 
 void printDateTime() {
@@ -62,6 +63,47 @@ void readline(char *line) {
     }
 }
 
+
+int check_redirect(char **args, int *Pfd) {
+    // Look for output redirection
+    char* filename = NULL;
+    for (int i = 0; args[i] != NULL; i++) {
+        if (strcmp(args[i], ">") == 0) {
+            if (args[i+1] != NULL) {
+                filename = args[i+1];
+            }
+            args[i] = NULL;
+            break;
+        }
+    }
+
+    if (filename == NULL) {
+        return 0;
+    }
+
+    // Open the file
+    *Pfd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0666);
+    if (*Pfd == -1) {
+        fprintf(stderr, "error opening file to redirect standard output\n");
+        perror("open");
+        return 1;
+    }
+
+    // Save a copy of the original file descriptor for standard output
+    //int saved_stdout_fd = dup(STDOUT_FILENO);
+
+    // Redirect standard output to the file
+    // Redirect standard output to the file
+    if (dup2(*Pfd, 1) == -1) {
+        perror("dup2");
+        return 1;
+    }
+
+    // Close the saved file descriptor
+    //close(saved_stdout_fd);
+    return 0;
+}
+
 void parse_args(char **args, char *token) {
     int count = 0;
     while (token != NULL) {
@@ -71,10 +113,6 @@ void parse_args(char **args, char *token) {
         token = strtok(NULL, " \n");
     }
     args[count] = NULL;
-
-    for (int j = 0; j < count; ++j) {
-        printf("%s ", args[j]);
-    }
 }
 
 void sig_handler(int signo) {

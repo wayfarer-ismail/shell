@@ -15,6 +15,8 @@ char util_path[MAX_LINE];
 
 int shell();
 
+int exec(char path[80], char **args, void *envp);
+
 int main(void)
 {
     int status = 0; // status of child process
@@ -57,14 +59,13 @@ int shell() {
         return 0;
     }
 
-    // set default directory to /home/user/my_program
-    chdir("/home/user/my_program");
     pid_t pid = fork();
     if (pid == 0) { // child process
         char path[MAX_LINE];
         sprintf(path, "%s/%s", util_path, args[0]); // construct full path
+
         // execute command
-        if (execve(path, args, NULL) < 0) {
+        if (exec(path, args, NULL) < 0) {
             fprintf(stderr, "Exec failed\n");
         }
 
@@ -77,5 +78,27 @@ int shell() {
         return -1; //if fork fails then stop programme
     }
 
+    return 0;
+}
+
+int exec(char path[MAX_LINE], char **args, void *envp) {
+    sprintf(path, "%s/%s", util_path, args[0]); // construct full path
+
+    int fd;
+    if (check_redirect(args, &fd) != 0) {
+        return 1;
+    }
+    // execute command
+    if (execve(path, args, envp) < 0) {
+        fprintf(stderr, "Exec failed\n");
+    }
+
+    close(fd);
+    // Reset standard output to the saved file descriptor
+    if (dup2(fd, STDOUT_FILENO) == -1) {
+        fprintf(stderr, "error resetting file descriptor to standard\n");
+        perror("dup2");
+        return 1;
+    }
     return 0;
 }

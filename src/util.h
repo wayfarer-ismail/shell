@@ -17,6 +17,8 @@ int cd(char **args);
 
 void readline(char *line);
 
+int check_redirect(char **args, int *Pfd);
+
 void parse_args(char **args, char *token);
 
 void sig_handler(int signo);

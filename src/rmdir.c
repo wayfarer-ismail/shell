@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (rmdir(argv[1]) != 0) {
-        fprintf(stderr, "Error: unable to directory %s\n", argv[1]);
+        fprintf(stderr, "Error: unable to remove directory %s\n", argv[1]);
         return 1;
     }
 
