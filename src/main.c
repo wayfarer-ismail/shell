@@ -19,13 +19,11 @@ int exec(char **args, void *envp);
 
 int main(void)
 {
-    int status = 0; // status of child process
-
     sprintf(util_path, "%s", getcwd(NULL, 0)); // construct path to where commands are stored
 
+    int status = 0; // status of shell process
     while (status == 0) {
         status = shell();
-        //printf("Status %i\n", status);
     }
 
     printf("bye\n");
@@ -68,7 +66,6 @@ int shell() {
         }
 
     } else if (pid > 0) { // parent process
-        signal(SIGINT, sig_handler); // watch for ctrl-c
         int status;
         waitpid(pid, &status, 0); // wait for child process to finish
 

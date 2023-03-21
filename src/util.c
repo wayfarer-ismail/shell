@@ -54,7 +54,9 @@ int cd(char **args) {
 
 void readline(char *line) {
     fflush(stdin);
-    fgets(line, MAX_LINE, stdin);
+    if (fgets(line, MAX_LINE, stdin) == NULL) {
+        exit(EXIT_SUCCESS);
+    }
 
     // trim newline character
     size_t len = strlen(line);

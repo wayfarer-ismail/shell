@@ -1,8 +1,4 @@
 /*
-    name: Ismail Elbahja
-    email: ismailelbahja03@gmail.com
-    student number: 21344991
-
     I have implemented the head utility, it accepts even/odd option and a specified amount of lines to print.
     All the options work correctly but I have not implemented a feature of head where if a negative number is passed for n
         the head funtion prints until EOF-n lines, instead my implementation just prints the whole file when given a negative n

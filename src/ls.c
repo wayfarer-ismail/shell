@@ -18,8 +18,9 @@ int main(void) {
     }
 
     while ((entry = readdir(dir)) != NULL) { // print directory contents
-        printf("%s\n", entry->d_name);
+        printf("%s ", entry->d_name);
     }
+    printf("\n");
 
     closedir(dir);
     return 0;
