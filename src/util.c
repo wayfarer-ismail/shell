@@ -77,7 +77,7 @@ int check_redirect(char **args, int *Pfd) {
         }
     }
 
-    if (filename == NULL) {
+    if (filename == NULL) { // no output redirection
         return 0;
     }
 
@@ -89,18 +89,12 @@ int check_redirect(char **args, int *Pfd) {
         return 1;
     }
 
-    // Save a copy of the original file descriptor for standard output
-    //int saved_stdout_fd = dup(STDOUT_FILENO);
-
-    // Redirect standard output to the file
     // Redirect standard output to the file
     if (dup2(*Pfd, 1) == -1) {
         perror("dup2");
         return 1;
     }
 
-    // Close the saved file descriptor
-    //close(saved_stdout_fd);
     return 0;
 }
 

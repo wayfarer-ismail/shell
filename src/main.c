@@ -15,7 +15,7 @@ char util_path[MAX_LINE];
 
 int shell();
 
-int exec(char path[80], char **args, void *envp);
+int exec(char **args, void *envp);
 
 int main(void)
 {
@@ -59,13 +59,11 @@ int shell() {
         return 0;
     }
 
+    int saved_stdout_fd = dup(STDOUT_FILENO); //save standard output file descriptor
     pid_t pid = fork();
     if (pid == 0) { // child process
-        char path[MAX_LINE];
-        sprintf(path, "%s/%s", util_path, args[0]); // construct full path
-
         // execute command
-        if (exec(path, args, NULL) < 0) {
+        if (exec(args, NULL) < 0) {
             fprintf(stderr, "Exec failed\n");
         }
 
@@ -73,6 +71,8 @@ int shell() {
         signal(SIGINT, sig_handler); // watch for ctrl-c
         int status;
         waitpid(pid, &status, 0); // wait for child process to finish
+
+        dup2(saved_stdout_fd, STDOUT_FILENO); //reset standard output to the saved file descriptor
         signal(SIGINT, SIG_DFL); //restore default behaviour
     } else {
         return -1; //if fork fails then stop programme
@@ -81,8 +81,9 @@ int shell() {
     return 0;
 }
 
-int exec(char path[MAX_LINE], char **args, void *envp) {
-    sprintf(path, "%s/%s", util_path, args[0]); // construct full path
+int exec(char **args, void *envp) {
+    char path[MAX_LINE];
+    sprintf(path, "%s/%s", util_path, args[0]); // construct full path to command
 
     int fd;
     if (check_redirect(args, &fd) != 0) {
@@ -94,11 +95,6 @@ int exec(char path[MAX_LINE], char **args, void *envp) {
     }
 
     close(fd);
-    // Reset standard output to the saved file descriptor
-    if (dup2(fd, STDOUT_FILENO) == -1) {
-        fprintf(stderr, "error resetting file descriptor to standard\n");
-        perror("dup2");
-        return 1;
-    }
+
     return 0;
 }
