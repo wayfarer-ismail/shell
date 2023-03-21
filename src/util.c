@@ -73,6 +73,7 @@ int check_redirect(char **args, int *Pfd) {
                 filename = args[i+1];
             }
             args[i] = NULL;
+            printf("args[%d] = %s\nfilename = %s", i, args[i], filename);
             break;
         }
     }
@@ -94,6 +95,7 @@ int check_redirect(char **args, int *Pfd) {
         perror("dup2");
         return 1;
     }
+    printf("Redirected standard output to %s\n", filename);
 
     return 0;
 }

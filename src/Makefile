@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -g -Wall
 LIBS = -lm
 
-all: main ls head sleep pwd mkdir rmdir
+all: main ls head sleep pwd mkdir rmdir echo cat whoami
 
 main: main.o util.o
 	$(CC) $(LIBS) $^ -o $@
@@ -29,6 +29,15 @@ rmdir: rmdir.o
 head: head.o
 	$(CC) $(LIBS) $^ -o $@
 
+echo: echo.o
+	$(CC) $(LIBS) $^ -o $@
+
+cat: cat.o
+	$(CC) $(LIBS) $^ -o $@
+
+whoami: whoami.o
+	$(CC) $(LIBS) $^ -o $@
+
 
 main.o: main.c util.h
 	$(CC) -c $(CFLAGS) $< -o $@
@@ -48,9 +57,17 @@ mkdir.o: mkdir.c
 rmdir.o: rmdir.c
 	$(CC) -c $(CFLAGS) $^ -o $@
 
+echo.o: echo.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+
+cat.o: cat.c
+	$(CC) -c $(CFLAGS) $^ -o $@
+
+whoami.o: whoami.c
+	$(CC) -c $(CFLAGS) $^ -o $@
 
 head.o: head.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
 clean:
-	rm -rf *.o main ls head sleep pwd mkdir rmdir
+	rm -rf *.o main ls head sleep pwd mkdir rmdir echo cat whoami
